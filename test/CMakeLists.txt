@@ -12,7 +12,7 @@ endif()
 include(${CMAKE_CURRENT_BINARY_DIR}/ParseAndAddCatchTests.cmake)
 
 add_executable(testuv3 main.cpp)
-target_link_libraries(testuv3 PRIVATE uv3decoder)
+target_link_libraries(testuv3 PRIVATE uv3decoder PUBLIC coverage_config)
 target_include_directories(testuv3 PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 

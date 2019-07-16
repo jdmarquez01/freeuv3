@@ -35,7 +35,7 @@ if( NOT SPHINX_EXECUTABLE )
   set(_Python_VERSIONS
     2.7 2.6 2.5 2.4 2.3 2.2 2.1 2.0 1.6 1.5
   )
- message("NOOOOOOOOOOOO")
+
   foreach( _version ${_Python_VERSIONS} )
     set( _sphinx_NAMES sphinx-build-${_version} )
 
@@ -82,11 +82,20 @@ mark_as_advanced(
 )
 
 function( Sphinx_add_target target_name builder conf source destination )
+
+set (param_out "")
+foreach( arg IN LISTS ARGN )
+set( param_out "${param_out}-D${arg}" )
+endforeach()
+
+
+  
   add_custom_target( ${target_name} ALL
     COMMAND ${SPHINX_EXECUTABLE} -b ${builder}
     -c ${conf} -d ${destination}
     ${source}
     ${destination}
+    ${param_out}
     COMMENT "Generating sphinx documentation: ${builder}"
     )
 
@@ -98,72 +107,74 @@ function( Sphinx_add_target target_name builder conf source destination )
 endfunction()
 
 # Target dependencies can be optionally listed at the end.
-function( Sphinx_add_targets target_base_name conf source base_destination )
+function( Sphinx_add_targets target_base_name conf source base_destination parameters )
 
   set( _dependencies )
 
+ 
   foreach( arg IN LISTS ARGN )
     set( _dependencies ${_dependencies} ${arg} )
   endforeach()
 
+  separate_arguments(parameters)
   if( ${SPHINX_HTML_OUTPUT} )
-    Sphinx_add_target( ${target_base_name}_html html ${conf} ${source} ${base_destination}/html )
+    Sphinx_add_target( ${target_base_name}_html html ${conf} ${source} ${base_destination}/html ${parameters})
     if (_dependencies)
         add_dependencies( ${target_base_name}_html ${_dependencies} )
     endif()
   endif()
 
   if( ${SPHINX_DIRHTML_OUTPUT} )
-    Sphinx_add_target( ${target_base_name}_dirhtml dirhtml ${conf} ${source} ${base_destination}/dirhtml )
+    Sphinx_add_target( ${target_base_name}_dirhtml dirhtml ${conf} ${source} ${base_destination}/dirhtml ${parameters})
     if (_dependencies)
     add_dependencies( ${target_base_name}_dirhtml ${_dependencies} )
     endif()
   endif()
 
   if( ${SPHINX_QTHELP_OUTPUT} )
-    Sphinx_add_target( ${target_base_name}_qthelp qthelp ${conf} ${source} ${base_destination}/qthelp )
+    Sphinx_add_target( ${target_base_name}_qthelp qthelp ${conf} ${source} ${base_destination}/qthelp ${parameters})
     if (_dependencies)
     add_dependencies( ${target_base_name}_qthelp ${_dependencies} )
     endif()
   endif()
 
   if( ${SPHINX_DEVHELP_OUTPUT} )
-    Sphinx_add_target( ${target_base_name}_devhelp devhelp ${conf} ${source} ${base_destination}/devhelp )
+    Sphinx_add_target( ${target_base_name}_devhelp devhelp ${conf} ${source} ${base_destination}/devhelp ${parameters})
     if (_dependencies)
     add_dependencies( ${target_base_name}_devhelp ${_dependencies} )
     endif()
   endif()
 
   if( ${SPHINX_EPUB_OUTPUT} )
-    Sphinx_add_target( ${target_base_name}_epub epub ${conf} ${source} ${base_destination}/epub )
+    Sphinx_add_target( ${target_base_name}_epub epub ${conf} ${source} ${base_destination}/epub ${parameters})
     if (_dependencies)
     add_dependencies( ${target_base_name}_epub ${_dependencies} )
     endif()
   endif()
 
   if( ${SPHINX_LATEX_OUTPUT} )
-    Sphinx_add_target( ${target_base_name}_latex latex ${conf} ${source} ${base_destination}/latex )
+    Sphinx_add_target( ${target_base_name}_latex latex ${conf} ${source} ${base_destination}/latex ${parameters})
     if (_dependencies)
     add_dependencies( ${target_base_name}_latex ${_dependencies} )
     endif()
   endif()
 
   if( ${SPHINX_MAN_OUTPUT} )
-    Sphinx_add_target( ${target_base_name}_man man ${conf} ${source} ${base_destination}/man )
+    Sphinx_add_target( ${target_base_name}_man man ${conf} ${source} ${base_destination}/man ${parameters})
     if (_dependencies)
     add_dependencies( ${target_base_name}_man ${_dependencies} )
     endif()
   endif()
 
   if( ${SPHINX_TEXT_OUTPUT} )
-    Sphinx_add_target( ${target_base_name}_text text ${conf} ${source} ${base_destination}/text )
+    Sphinx_add_target( ${target_base_name}_text text ${conf} ${source} ${base_destination}/text ${parameters})
     if (_dependencies)
     add_dependencies( ${target_base_name}_text ${_dependencies} )
     endif()
   endif()
 
   if( ${BUILD_TESTING} )
-    sphinx_add_target( ${target_base_name}_linkcheck linkcheck ${conf} ${source} ${base_destination}/linkcheck )
+    sphinx_add_target( ${target_base_name}_linkcheck linkcheck ${conf} ${source} ${base_destination}/linkcheck ${parameters})
     if (_dependencies)
     add_dependencies( ${target_base_name}_linkcheck ${_dependencies} )
     endif()

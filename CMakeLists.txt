@@ -74,11 +74,32 @@ endmacro()
 set (CMAKE_CXX_STANDARD 11)
 
 
+# Code Coverage Configuration
+add_library(coverage_config INTERFACE)
+
+option(CODE_COVERAGE "Enable coverage reporting" ON)
+
+set(CODE_COVERAGE ON)
+if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  # Add required flags (GCC & LLVM/Clang)
+  target_compile_options(coverage_config INTERFACE
+    -O0        # no optimization
+    -g         # generate debug info
+    --coverage # sets all required flags
+  )
+  message("coverage enabled")
+  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+    target_link_options(coverage_config INTERFACE --coverage)
+  else()
+    target_link_libraries(coverage_config INTERFACE --coverage)
+  endif()
+endif(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 
 #code analisys
   find_package(Tidy)
 #  find_package(CppCheck)
   find_package(IWYU)
+
 
 
 option(BUILD_DOC "Build documentation" OFF)
@@ -88,26 +109,32 @@ if (BUILD_DOC)
  
  
   find_package(PythonInterp REQUIRED)
-  find_package(Sphinx REQUIRED)
+  #find_package(Sphinx REQUIRED)
   find_package(Doxygen REQUIRED)
   
   add_subdirectory(doc)
   
   
 
-  add_custom_target( doc_doxygen ALL
-                      COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-                      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-                      COMMENT "Generating API documentation with Doxygen"
-                      VERBATIM )
+  #add_custom_target( doc_doxygen ALL
+  #                    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+  #                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  #                    COMMENT "Generating API documentation with Doxygen"
+  #                    VERBATIM )
 
-  set(SPHINX_CONF_DIR ${CMAKE_BINARY_DIR})
-  set(SPHINX_INPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc)
-  set(SPHINX_DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-  set(SPHINX_DEPENDENCIES  )
-  set(sphinx_target_base_name build)
+  
+  #set(SPHINX_CONF_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc )
+  #set(SPHINX_INPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/doc)
+  #set(SPHINX_DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-  Sphinx_add_targets(${sphinx_target_base_name} ${SPHINX_CONF_DIR} ${SPHINX_INPUT_DIR} ${SPHINX_DESTINATION} ${SPHINX_DEPENDENCIES})
+  #set(SPHINX_DEPENDENCIES  )
+  #set(sphinx_target_base_name build)
+
+  #set (parameters "breathe_projects.freeUV3=${CMAKE_CURRENT_BINARY_DIR}/xml")
+
+  #trace(parameters)
+
+  #Sphinx_add_targets(${sphinx_target_base_name} ${SPHINX_CONF_DIR} ${SPHINX_INPUT_DIR} ${SPHINX_DESTINATION} "${parameters}" ${SPHINX_DEPENDENCIES} )
   
 endif(BUILD_DOC) 
 
