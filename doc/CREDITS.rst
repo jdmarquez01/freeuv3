@@ -1,0 +1,5 @@
+=======
+CREDITS
+=======
+
+.. include:: ../CREDITS.md

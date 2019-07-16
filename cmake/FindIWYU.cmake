@@ -1,0 +1,12 @@
+find_program(IWYU NAMES include-what-you-use iwyu) 
+if(IWYU)
+  if(MSVC)
+    set(IWYU_VS_FLAGS "--driver-mode=cl")
+  else()
+    set(IWYU_VS_FLAGS "-Xiwyu")
+  endif()
+  
+  message(STATUS "Found include-what-you-use: ${IWYU}")
+  set(CMAKE_C_INCLUDE_WHAT_YOU_USE ${IWYU} ${IWYU_VS_FLAGS})
+  set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${CMAKE_C_INCLUDE_WHAT_YOU_USE} )
+endif()

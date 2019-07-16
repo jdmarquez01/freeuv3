@@ -1,0 +1,11 @@
+[requires]
+boost/1.66.0@conan/stable
+Poco/1.9.0@pocoproject/stable
+yaml-cpp/0.6.2@bincrafters/stable 
+
+[generators]
+cmake
+
+[options]
+Boost:shared=False
+Poco:shared=False
