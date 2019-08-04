@@ -1,1 +1,5 @@
-.. include:: ../README.md
+README
+======
+
+this is my README
+

@@ -58,6 +58,8 @@ def create_build_env(dirname='virtualenv'):
     pass
   # Install Sphinx and Breathe.
   pip_install('sphinx')
+  pip_install('m2r')
+  pip_install('recommonmark')
   pip_install('sphinx_rtd_theme')
   pip_install('michaeljones/breathe',
               '129222318f7c8f865d2631e7da7b033567e7f56a',
@@ -73,7 +75,7 @@ def build_docs(version='dev', **kwargs):
   
   cmd = ['doxygen', '-']
   p = Popen(cmd, stdin=PIPE)
-  doxyxml_dir = os.path.join(work_dir, 'doxyxml')
+  doxygen_dir = os.path.join(work_dir, 'doxygen')
   p.communicate(input=r'''
       PROJECT_NAME      = freeUV3
       GENERATE_LATEX    = NO
@@ -84,22 +86,22 @@ def build_docs(version='dev', **kwargs):
       QUIET             = YES
       JAVADOC_AUTOBRIEF = YES
       AUTOLINK_SUPPORT  = NO
-      GENERATE_HTML     = NO
+      GENERATE_HTML     = YES
       GENERATE_XML      = YES
-      XML_OUTPUT        = {1}
+      OUTPUT_DIRECTORY  = {1}
       ALIASES           = "rst=\verbatim embed:rst"
       ALIASES          += "endrst=\endverbatim"
       MACRO_EXPANSION   = YES
       PREDEFINED        = 
       EXCLUDE_SYMBOLS   = 
-    '''.format(include_dir, doxyxml_dir).encode('UTF-8'))
+    '''.format(include_dir, doxygen_dir).encode('UTF-8'))
   if p.returncode != 0:
     raise CalledProcessError(p.returncode, cmd)
   html_dir = os.path.join(work_dir, 'html')
   main_versions = reversed(versions[-3:])
 
   check_call(['python3', 'virtualenv/bin/sphinx-build',
-              '-Dbreathe_projects.freeUV3=' + os.path.abspath(doxyxml_dir),
+              '-Dbreathe_projects.freeUV3=' + os.path.abspath(doxygen_dir + '/xml' ),
               '-Dversion=' + version, '-Drelease=' + version,
               '-Aversion=' + version, '-Aversions=' + ','.join(main_versions),
               '-b', 'html', doc_dir, html_dir])

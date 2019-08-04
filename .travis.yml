@@ -9,21 +9,20 @@ env:
     - CXX_FLAGS="-Wall -pedantic -Werror -Wno-variadic-macros -Wno-long-long -Wno-shadow"
     # Misc
     - RUN_TESTS=true
-    - COVERAGE=false
+    - COVERAGE=true
 
 matrix:
   include:
     - os: linux
       dist: trusty
       sudo: true
-      compiler: gcc
+      compiler: gcc-6
       addons:
        apt:
          packages: &precise_latest_boost_packages
-           - gcc-4.8
-           - g++-4.8
-           #- gcov-4.9
-           - clang-3.7
+           - gcc-6
+           - g++-6
+           #- clang-5.0
            - valgrind
            # Misc
            - python-yaml
@@ -32,16 +31,18 @@ matrix:
            - python3-pip
          sources: &precise_latest_boost_sources
            - ubuntu-toolchain-r-test
-           - llvm-toolchain-precise-3.7
+           - llvm-toolchain-precise-5.0
     
 before_install:
     # Combine global build options with OS/compiler-dependent options
+    - export CXX="g++-6"
+    - export CC="gcc-6"
     - export CMAKE_OPTIONS=${CMAKE_OPTIONS}" "${ENV_CMAKE_OPTIONS}
     - export CXX_FLAGS=${CXX_FLAGS}" "${ENV_CXX_FLAGS}
     - sudo apt-get install python3
 
 install:
-    - if [ "$CXX" = "clang++" ] && [ "$TRAVIS_OS_NAME" = "linux" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
+    #- if [ "$CXX" = "clang++" ] && [ "$TRAVIS_OS_NAME" = "linux" ]; then export CXX="clang++-5.0" CC="clang-5.0"; fi
     - echo ${PATH}
     - echo ${CXX}
     - ${CXX} --version
@@ -63,10 +64,18 @@ script:
     ############################################################################
      - mkdir -p build
      - cd build
-     - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_FLAGS=${CXX_FLAGS} -DCODE_COVERAGE=ON -DBUILD_TESTS=ON .. 
-     - make
-     - ctest
-
-
+     - cmake ${CMAKE_OPTIONS} -DCMAKE_BUILD_TYPE=Debug -DCODE_COVERAGE=ON -DBUILD_DOC=ON -DBUILD_TESTS=ON ..
+     - make doc 
+     - make ccov-testuv3
+     
 after_success:
-    - codecov -t 4d4f64c4-32f5-40f8-b51a-6e4e5146d7ee -X gcov
+    - bash <(curl -s https://codecov.io/bash) -X coveragepy
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN #You will need to add your (ENCRYPTED if set in the .travis.yml) GH token as environment variable of your project
+  keep-history: true
+  on:
+    branch: master
+  local-dir: build/doc/doxygen/html

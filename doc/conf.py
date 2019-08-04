@@ -52,12 +52,13 @@ if os.environ.get('READTHEDOCS', None) == 'True':
     '''.format('../src', doxyxml_dir).encode('UTF-8'))
   if p.returncode != 0:
     raise CalledProcessError(p.returncode, cmd)
+  breathe_projects = { "freeUV3": "./doxyxml/" }
 
 
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.ifconfig', 'breathe','sphinx_rtd_theme']
+extensions = ['sphinx.ext.ifconfig', 'breathe','sphinx_rtd_theme','recommonmark']
 
 breathe_default_project = "freeUV3"
 breathe_domain_by_extension = {"h" : "cpp"}
@@ -66,13 +67,13 @@ breathe_domain_by_extension = {"h" : "cpp"}
 templates_path = ['_templates']
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ['.rst','.md']
 
 # The encoding of source files.
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-#master_doc = 'contents'
+master_doc = 'index'
 
 # General information about the project.
 project = u'freeUV3'

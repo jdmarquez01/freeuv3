@@ -2,4 +2,4 @@
 CREDITS
 =======
 
-.. include:: ../CREDITS.md
+this is my credits
