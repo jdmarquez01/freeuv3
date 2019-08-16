@@ -51,7 +51,7 @@ struct UV3Node
 {
     struct layout
     {
-        layout() : id_{0},index_{0},repetitions{0},parent{0},unkownField{0},concatenateWith{0},otro{0},reference{0},kk{0},kk2{0} {}
+        //layout() : id_{0},index_{0},repetitions{0},parent{0},unkownField{0},concatenateWith{0},otro{0},reference{0},kk{0},kk2{0} {}
       
 
         int   id_;
@@ -359,6 +359,7 @@ public:
 
     void cleanup() {
         nodelist.clear();
+ 
         f.clear();
         good = false;
         ifs->clear();
@@ -482,7 +483,9 @@ UV3Decoder::UV3Decoder(const char* filename)
  * @brief Destroy the UV3Decoder::UV3Decoder object
  *
  */
-UV3Decoder::~UV3Decoder() {}
+UV3Decoder::~UV3Decoder() {
+    d_ptr->cleanup();
+}
 
 /**
  * @brief Check if a file is opened and valid by the instance

@@ -18,12 +18,13 @@ public:
     /** stream for readin this */
     std::istream& buffer_;
 
+    virtual ~UV3File() = default;
 protected:
     UV3File(std::istream& buffer, const std::string& filename, const std::string& path)
             : filename_(filename)
             , path_(path)
             , buffer_(buffer){}
-    virtual ~UV3File() = default;
+    
 
 private:
     UV3File(const UV3File& rhs) = delete;

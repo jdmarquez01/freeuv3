@@ -9,7 +9,7 @@ using namespace freeUV3;
 
 TEST_CASE( "open", "[factorial]" ) {
 
-    UV3Decoder kk("bicristal2.UVData");
+    UV3Decoder kk("test.UVData");
     if (kk.good()) {
         
         //uv3 t("");
@@ -32,8 +32,12 @@ TEST_CASE( "open", "[factorial]" ) {
 
 TEST_CASE( "open and close", "[factorial]" ) {
 
-    UV3Decoder kk("bicristal2.UVData");
-    if (kk.good()) {
+    UV3Decoder kk("test.UVData");
+
+    UV3Decoder kk2("test.UVData");
+
+
+    if (kk2.good()) {
         
         //uv3 t("");
         auto v = kk.get();

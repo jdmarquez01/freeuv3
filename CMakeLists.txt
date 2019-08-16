@@ -108,7 +108,7 @@ endif()
 #find_package(IWYU)
 
 option(BUILD_DOC "Build documentation" OFF)
-set(BUILD_DOC ON)
+
 # Builds the documentation.
 if(BUILD_DOC)
 
@@ -166,8 +166,10 @@ add_subdirectory(src)
 # ------------------------------------------------------------------------------
 # -----------
 # testing
-option(BUILD_TESTING "build test" ON)
+option(BUILD_TESTING "build test" OFF)
+set (BUILD_TESTING ON)
 if(BUILD_TESTING)
+  configure_file("${CMAKE_SOURCE_DIR}/data/test.UVData" "${CMAKE_BINARY_DIR}/test/test.UVData" COPYONLY)
   #INCLUDE(CTest)
   enable_testing()
   add_subdirectory(test)

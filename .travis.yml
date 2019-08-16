@@ -3,7 +3,7 @@ language: cpp
 env:
   global:
     # Ubuntu version
-    - LINUX_DIST=trusty
+    - LINUX_DIST=bionic
     - DEPS_DIR=${TRAVIS_BUILD_DIR}/deps
     # Global build options and C++ flags
     - CXX_FLAGS="-Wall -pedantic -Werror -Wno-variadic-macros -Wno-long-long -Wno-shadow"
@@ -14,7 +14,8 @@ env:
 matrix:
   include:
     - os: linux
-      dist: trusty
+      dist: bionic
+      python: 3.7
       sudo: true
       compiler: gcc-6
       addons:
@@ -22,16 +23,12 @@ matrix:
          packages: &precise_latest_boost_packages
            - gcc-6
            - g++-6
-           #- clang-5.0
            - valgrind
            # Misc
            - python-yaml
            - lcov
            - doxygen
            - python3-pip
-         sources: &precise_latest_boost_sources
-           - ubuntu-toolchain-r-test
-           - llvm-toolchain-precise-5.0
     
 before_install:
     # Combine global build options with OS/compiler-dependent options
@@ -39,7 +36,6 @@ before_install:
     - export CC="gcc-6"
     - export CMAKE_OPTIONS=${CMAKE_OPTIONS}" "${ENV_CMAKE_OPTIONS}
     - export CXX_FLAGS=${CXX_FLAGS}" "${ENV_CXX_FLAGS}
-    - sudo apt-get install python3
 
 install:
     #- if [ "$CXX" = "clang++" ] && [ "$TRAVIS_OS_NAME" = "linux" ]; then export CXX="clang++-5.0" CC="clang-5.0"; fi
@@ -47,7 +43,9 @@ install:
     - echo ${CXX}
     - ${CXX} --version
     - ${CXX} -v
-    - sudo pip3 install codecov sphinx typing
+    - pyenv versions
+    - python3 --version
+    - sudo pip3 install codecov typing
     
     # Download and install recent cmake
     - |
@@ -64,7 +62,8 @@ script:
     ############################################################################
      - mkdir -p build
      - cd build
-     - cmake ${CMAKE_OPTIONS} -DCMAKE_BUILD_TYPE=Debug -DCODE_COVERAGE=ON -DBUILD_DOC=ON -DBUILD_TESTS=ON ..
+     - cmake ${CMAKE_OPTIONS} -DCMAKE_BUILD_TYPE=Debug -DCODE_COVERAGE=ON -DBUILD_DOC=ON -DBUILD_TESTING=ON ..
+     - make
      - make doc 
      - make ccov-testuv3
      

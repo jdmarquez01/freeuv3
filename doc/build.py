@@ -57,13 +57,11 @@ def create_build_env(dirname='virtualenv'):
   except DistributionNotFound:
     pass
   # Install Sphinx and Breathe.
-  pip_install('sphinx')
-  pip_install('m2r')
+  pip_install('sphinx-doc/sphinx','v2.1.2')
+  pip_install('breathe')
   pip_install('recommonmark')
   pip_install('sphinx_rtd_theme')
-  pip_install('michaeljones/breathe',
-              '129222318f7c8f865d2631e7da7b033567e7f56a',
-              min_version='4.2.0')
+  
 
 def build_docs(version='dev', **kwargs):
   doc_dir = kwargs.get('doc_dir', os.path.dirname(os.path.realpath(__file__)))

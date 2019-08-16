@@ -1,5 +1,1 @@
-README
-======
-
-this is my README
-
+.. include:: ../README.rst
