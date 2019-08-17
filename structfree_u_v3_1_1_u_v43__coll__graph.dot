@@ -1,0 +1,11 @@
+digraph "freeUV3::UV43"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node2 [label="freeUV3::UV43",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="freeUV3::UV3Node",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structfree_u_v3_1_1_u_v3_node.html"];
+  Node4 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" l_" ,fontname="Helvetica"];
+  Node4 [label="freeUV3::UV3Node::layout",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structfree_u_v3_1_1_u_v3_node_1_1layout.html"];
+  Node3 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" parent\nref" ,fontname="Helvetica"];
+}
